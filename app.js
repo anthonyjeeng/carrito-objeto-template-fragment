@@ -1,112 +1,77 @@
-const carrito = document.getElementById('carrito');
-const template = document.getElementById('template');
-const footer = document.getElementById('footer');
-const templateFooter = document.getElementById('templateFooter');
-const fragment = document.createDocumentFragment();
+const formulario = document.getElementById('formulario');
+const userName = document.getElementById('userName');
+const userEmail = document.getElementById('userEmail');
 
-document.addEventListener('click', (e) => {
+const alertSuccess = document.getElementById('alertSuccess');
+const alertEmail = document.getElementById('alertEmail');
+const alertName = document.getElementById('alertName');
 
-    if (e.target.matches(".card .btn-outline-primary")) {  //si se apreta en algunos de los botones de "agregar"
-        agregarAlCarrito(e);
+const regUserName = /^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$/;
+const regUserEmail = /^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$/;
+
+const pintarMensajeExito = () => {
+
+    alertSuccess.classList.remove('d-none');
+    alertSuccess.textContent = 'Mensaje enviado con éxito'
+
+}
+
+const pintarMensajeError = (errores) => {
+
+    errores.forEach(item => {
+
+        item.tipo.classList.remove("d-none");
+        item.tipo.textContent = item.msg;
+
+    })
+
+}
+
+formulario.addEventListener('submit', e => {
+
+    e.preventDefault();
+
+    alertSuccess.classList.add('d-none');
+
+    const errores = [];
+
+    //esto devuelve true si existe solo espacios
+    //console.log(!userName.value.trim())
+
+    if (!regUserName.test(userName.value) || !userName.value.trim()) {
+
+        userName.classList.add("is-invalid")
+        errores.push({
+            tipo: alertName,
+            msg: "Formato no válido en el campo nombre, solo letras"
+        })
+
+    } else {
+        userName.classList.remove("is-invalid")
+        userName.classList.add("is-valid")
+        alertName.classList.add("d-none")
     }
 
-    if (e.target.matches('#carrito .list-group-item .btn-success')) {
-        btnAumentar(e)
+    if (!regUserEmail.test(userEmail.value) || !userEmail.value.trim()) {
+
+        userEmail.className.add("is-invalid")
+        errores.push({
+            tipo: alertEmail,
+            msg: "Escriba un correo válido"
+        })
+
+    } else {
+        userEmail.classList.remove("is-invalid");
+        userEmail.classList.add("is-valid");
+        alertEmail.classList.add("d-none");
     }
 
-    if (e.target.matches('#carrito .list-group-item .btn-danger')) {
-        btnDisminuir(e)
+    if (errores.length !== 0){
+        pintarMensajeError(errores);
+        return;
     }
+
+    console.log('formulario enviado');
+    pintarMensajeExito();
 
 })
-
-let carritoObjeto = [];   
-
-const agregarAlCarrito = (e) => {
-
-    const producto = {
-        titulo: e.target.dataset.fruta,
-        id: e.target.dataset.fruta,
-        cantidad: 1,
-        precio: parseInt(e.target.dataset.precio)
-    };
-
-    const indice = carritoObjeto.findIndex((item) => item.id === producto.id)
-
-    if (indice === -1){
-        carritoObjeto.push(producto);
-    } else {
-        carritoObjeto[indice].cantidad ++;
-        // carritoObjeto[indice].precio = carritoObjeto[indice].cantidad * producto.precio;
-    }
-
-    console.log(carritoObjeto)
-
-    pintarCarrito();
-};
-
-const pintarCarrito = () => {
-
-    carrito.textContent = "";
-    
-    carritoObjeto.forEach(item => {
-        const clone = template.content.cloneNode(true);
-        clone.querySelector('.text-white .lead').textContent = item.titulo;
-        clone.querySelector('.badge').textContent = item.cantidad;
-        clone.querySelector('div .lead span').textContent = item.precio * item.cantidad;
-
-        clone.querySelector('.btn-danger').dataset.id = item.id;
-        clone.querySelector('.btn-success').dataset.id = item.id;
-
-        fragment.appendChild(clone)
-    })
-
-    carrito.appendChild(fragment);
-    
-    pintarFooter();
-};
-
-const pintarFooter = () => {
-
-    footer.textContent = ""
-
-    const total = carritoObjeto.reduce((acc, current) => acc + current.cantidad * current.precio, 0)
-
-    if (total === 0) return
-
-    const clone = templateFooter.content.cloneNode(true);
-    clone.querySelector('span').textContent = total;
-
-    footer.appendChild(clone);
-
-}
-
-const btnAumentar = (e) => {
-    console.log("me diste click", e.target.dataset.id);
-    carritoObjeto = carritoObjeto.map((item) => {
-        if (item.id === e.target.dataset.id){
-            item.cantidad ++;
-        }
-        return item
-    })
-
-    pintarCarrito();
-}
-
-const btnDisminuir = (e) => {
-    console.log("me diste click", e.target.dataset.id);
-    
-    carritoObjeto = carritoObjeto.filter(item => {
-        if (item.id === e.target.dataset.id) {
-            if (item.cantidad > 0) {
-                item.cantidad --;
-                if (item.cantidad === 0) return;
-                return item;
-            }
-        } else {
-            return item;
-        }
-    })
-
-    pintarCarrito();
-}
