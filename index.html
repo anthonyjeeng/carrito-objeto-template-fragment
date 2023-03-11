@@ -1,20 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- REQUIRED META TAGS -->
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jugando con DOM</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <!-- BOOTSTRAP -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+
+    <title>Hello world</title>
+
 </head>
 <body>
     
-    <div class="container">
+    <div class="container my-5">
+        <!-- Spinner cargando -->
+        <section class="d-flex align-items-center d-none" id="loading">
+            <strong>Loading...</strong>
+            <div
+              class="spinner-border ms-auto"
+              role="status"
+              aria-hidden="true"
+            ></div>
+        </section>
 
-        <h1>Promesas</h1>
-
+        <section class="row" id="card-dinamicas">
+        </section>
     </div>
+    
+    <template id="template-card">
+        <article class="col-12 col-md-6 col-lg-3 mb-3">
+            <div class="card text-center shadow">
+                <img src="https://rickandmortyapi.com/api/character/avatar/1.jpeg" alt="" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title text-primary lead">
+                        Nombre del personaje
+                    </h5>
+                    <p class="lead text-secondary">Human</p>
+                </div>
+            </div>
+        </article>
+    </template>
 
     <script src="app.js"></script>
 </body>
