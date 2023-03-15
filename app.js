@@ -6,6 +6,8 @@ const cardsProfesores = document.querySelector('#cardsProfesores');
 const templateEstudiante = document.querySelector('#templateEstudiante').content;
 const templateProfesor = document.querySelector('#templateProfesor').content;
 
+const alert = document.querySelector('.alert');
+
 document.addEventListener('click', e => {
     //console.log(e.target.dataset.nombre)
     if (e.target.dataset.nombre){
@@ -118,8 +120,15 @@ const profesores = []
 formulario.addEventListener('submit', e => {
     e.preventDefault();
 
+    alert.classList.add("d-none");
+
     const datos = new FormData(formulario);
     const [nombre, edad, opcion] = [...datos.values()];
+
+    if (!nombre.trim() || !edad.trim() || !opcion.trim()){
+        alert.classList.remove('d-none');
+        return
+    }
 
     if (opcion === "Estudiante"){
         const estudiante = new Estudiante(nombre, edad);
